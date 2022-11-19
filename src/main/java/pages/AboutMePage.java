@@ -1,9 +1,10 @@
-//нужны ожидания на выпадающие списки, радиобаттоны и чек-боксы- медленно работают, быстро нет
-//атрибут не содержит (toBecontains + not) - в классе нет hide, потом клик
-//для поля город ожидание что нет атрибута disabled = true
+//картинка - как сделать проверку - что там есть файл, не пусто.
+//тест-дизайн: надо разлогиниться и запустить ассёрты или сделать новый тест - один за другим?
+//как отключить все всплывашки и принять куки в настройках браузера
+//куками
 
-
-//как построить локаторы для второго контакта
+//доделать: чек-боксы,
+//построить локаторы для второго контакта
 //к дата-нам верхнего уровня
 
 package pages;
@@ -12,13 +13,20 @@ import components.InputFormComponent;
 import data.*;
 import data.countriesAndCities.CitiesData;
 import data.countriesAndCities.CountriesData;
+import data.textFieldsLocators.InputFieldData;
+import org.apache.logging.log4j.core.util.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+
 
 public class AboutMePage extends AbsBasePage {
 
@@ -27,10 +35,10 @@ public class AboutMePage extends AbsBasePage {
       super(driver);
    }
 
-   private String aboutPagepath = "/lk/biography/personal/";
-   public void open() {
-          driver.get(BASE_URL + aboutPagepath);
-   }
+//   private String aboutPagepath = "/lk/biography/personal/";
+//   public void open() {
+//          driver.get(BASE_URL + aboutPagepath);
+//   }
 
    private String userRuFirstName = ruFaker.name().firstName();
    private String userRuLastName = ruFaker.name().lastName();
@@ -43,13 +51,15 @@ public class AboutMePage extends AbsBasePage {
    private String userNetworkUserNameFirst = enFaker.name().username();
    private String userNetworkUserNameSecond = enFaker.name().username();
 
-   private String userCountry = CountriesData.Russia.getName();
-   private String userCity = CitiesData.Anapa.getName();
+   private String userCountry = CountriesData.MOLDOVA.getName();
+   private String userCity = CitiesData.BELCI.getName();
    private String userEnglishLevel = EnglishLevelData.ADVANCED.getName();
    private Boolean userReadyToRelocate = ReadyToRelocateData.TRUE.getValue();
-   private String workFormat = WorkFormatData.FLEXIBLE.getName();
+   private Boolean workFormatFlexible = false; //убрать в енам и передавать рандомно
+   private Boolean workFormatRemote = true;
+   private Boolean workFormatFullTime = false;
 
-   private String userGender = GenderData.Female.getName();
+   private String userGender = GenderData.FEMALE.getName();
 
    private DevLanguagesData userDevLanguageFromEnum = DevLanguagesData.RUBY;
    private DevExperienceData userDevExperienceFromEnum = DevExperienceData.TWOYEARS;
@@ -69,20 +79,15 @@ public class AboutMePage extends AbsBasePage {
    private String userFirstNetworkTypeSelector = "button[title='"+userNetworkFirst+"']";
    private String userSecondNetworkTypeSelector = "button[data-value='"+userNetworkSecond+"']";
 
-   private By firstNameRu = By.cssSelector("#id_fname");
-   private By firstNameEn = By.cssSelector("#id_fname_latin");
-   private By lastNameRu = By.cssSelector("#id_lname");
-   private By lastNameEn = By.cssSelector("#id_lname_latin");
-   private By blogName = By.cssSelector("#id_blog_name");
    private By birthDateLocator = By.cssSelector("input[title='День рождения']");
-   private By country = By.cssSelector("input[name='country']+ div");
-   private By city = By.cssSelector("input[data-title='Город']+div");
+   private By country = By.cssSelector("input[name='country']+ div"); //в класс с селектом над лэйблом
+   private By city = By.cssSelector("input[data-title='Город']+div");//то же самое
+
+
    private By englishLevel = By.cssSelector("input[data-title='Уровень знания английского языка']+div");
 //   private By readyToRelocateTrue = By.cssSelector("input[type='radio'][value='True']");
 //   private By readyToRelocateFalse = By.cssSelector("input[type='radio'][value='False']");
    private By genderSelector = By.cssSelector("select[name='gender']");
-   private By companySelector = By.cssSelector("input[name='company']");
-   private By positionSelector = By.cssSelector("input[name='work']");
    private By addExperienceSelector = By.cssSelector("a[class^='experience-add']");
    private By devLanguageSelector = By.cssSelector("select[name='experience-0-experience']");
    private By devExperienceSelector = By.cssSelector("select[name='experience-0-level']");
@@ -101,128 +106,149 @@ public class AboutMePage extends AbsBasePage {
    private String modalConfirmation = "[class='modal settings-photo-modal'] button";
    private Select select = null;
 
-   public void fillPersonalData() {
+   public AboutMePage fillPersonalData() {
 
       inputForm.loadImage(addAvatarSelector, imagePath, modalConfirmation);
-      inputForm.fillTextField(firstNameRu, userRuFirstName);
-      inputForm.fillTextField(lastNameRu, userRuLastName);
-      inputForm.fillTextField(firstNameEn, userEnFirstName);
-      inputForm.fillTextField(lastNameEn, userEnLastName);
-      inputForm.fillTextField(blogName, userEnBlogName);
+      inputForm.fillInputFields(InputFieldData.FIRSTNAMERU, userRuFirstName);
+      inputForm.fillInputFields(InputFieldData.LASTNAMERU, userRuLastName);
+      inputForm.fillInputFields(InputFieldData.FIRSTNAMEEN, userEnFirstName);
+      inputForm.fillInputFields(InputFieldData.LASTNAMEEN, userEnLastName);
+      inputForm.fillInputFields(InputFieldData.BLOGNAME, userEnBlogName);
       inputForm.fillTheDateField(birthDateLocator, userBirthDate);
       logger.info("заполнен блок 'Персональные данные'");
-
+   return this;
    }
 
-   public void fillGeneralInfo ()  {
-//    inputForm.popupInteraction(country, countrySelector);
-//    inputForm.popupInteraction(city, citySelector);
-//    inputForm.popupInteraction(englishLevel, englishLevelSelector);
-     inputForm.radioButtonInteraction(readyToRelocateFalse, readyToRelocateTrue, userReadyToRelocate);
-//    if (userReadyToRelocate.equals(ReadyToRelocateData.TRUE.getName())) { //разобраться, почему ElementNotInteractableException
-//       inputForm.radioButtonSetTrue(readyToRelocateTrue);
-//    }
-//    else {
-//       inputForm.radioButtonSetFalse(readyToRelocateFalse);
-//    }
-//   if (workFormat.equals(WorkFormatData.FULLTIME.getName())) {
-//         inputForm.checkboxSelect(fullTimeString);
-//         inputForm.checkboxUnSelect(partTimeString);
-//         inputForm.checkboxUnSelect(remoteString);
-//      }
-//      if (workFormat.equals(WorkFormatData.FLEXIBLE.getName())) {
-//         inputForm.checkboxUnSelect(fullTimeString);
-//         inputForm.checkboxSelect(partTimeString);
-//         inputForm.checkboxUnSelect(remoteString);
-//      }
-//      if (workFormat.equals(WorkFormatData.REMOTE.getName())) {
-//         inputForm.checkboxUnSelect(fullTimeString);
-//         inputForm.checkboxUnSelect(partTimeString);
-//         inputForm.checkboxSelect(remoteString);
-//      }
+   public AboutMePage fillGeneralInfo ()  {
+   By countryListSelector = By.xpath("//input[@name='country']/../following-sibling::div");
+   inputForm.popupInteraction(country,countryListSelector, countrySelector);
+   wait.until(ExpectedConditions.not(ExpectedConditions.attributeContains(city, "value disabled", "disabled")));
+   By cityListSelector = By.xpath("//input[@name='city']/../following-sibling::div");
+   inputForm.popupInteraction(city, cityListSelector, citySelector);
+    By englishLevelListSelector = By.xpath("//input[@name='english_level']/../following-sibling::div");
+    inputForm.popupInteraction(englishLevel, englishLevelListSelector, englishLevelSelector);
+   // By englishLevelList = By.xpath("//input[@data-title='Уровень знания английского языка']/../following-sibling::div");
+  //  wait.until((ExpectedConditions.attributeContains(englishLevelList, "class", "hide")));
+//
+    inputForm.radioButtonInteraction(readyToRelocateFalse, readyToRelocateTrue, userReadyToRelocate);
+    inputForm.checkboxInteraction(fullTimeString, workFormatFullTime);
+    inputForm.checkboxInteraction(partTimeString, workFormatFlexible);
+    inputForm.checkboxInteraction(remoteString, workFormatRemote);
     logger.info("заполнен блок 'Основная информация'");
-   }
-   public void fillContactInfo () {
-    inputForm.popupInteraction(networkFirstTypeSelector, userFirstNetworkTypeSelector);
-    inputForm.fillTextField(networkFirstValueSelector, userNetworkUserNameFirst);
+    return this;
 
-//    inputForm.clickSimpleButton(addNetworkButton);  //неправильно построен локатор для второго контакта
-//    inputForm.popupInteraction(networkSecondTypeSelector, userSecondNetworkTypeSelector);//вторая не добавляется
-//    inputForm.fillTextField(networkSecondValueSelector, userNetworkUserNameSecond);
-    logger.info("заполнен блок 'Контактная информация'");
-   }
+     }
+//   public AboutMePage fillContactInfo () { //добавить нажатие кнопки добавить или удалить перед заполнением данных
+//    inputForm.popupInteraction(networkFirstTypeSelector, userFirstNetworkTypeSelector);
+//   // inputForm.fillTextField(networkFirstValueSelector, userNetworkUserNameFirst);
+//
+////    inputForm.clickSimpleButton(addNetworkButton);  //неправильно построен локатор для второго контакта
+////    inputForm.popupInteraction(networkSecondTypeSelector, userSecondNetworkTypeSelector);//вторая не добавляется
+////    inputForm.fillTextField(networkSecondValueSelector, userNetworkUserNameSecond);
+//    logger.info("заполнен блок 'Контактная информация'");
+//    return this;
+    //class="lk-cv-block__select-options lk-cv-block__select-options_left js-custom-select-options-container hide"
+    //вот этот элемент скрывается class="container__col container__col_12 container__col_middle"
+  //вот это блок верхнеуровневый
+    //если меньше двух - добавить ещё один, если больше - удалить
+// }
 
-   public void fillOtherInfo () {
+   public AboutMePage fillOtherInfo () {
    select = new Select(driver.findElement(genderSelector));
-       if (userGender.equalsIgnoreCase(GenderData.Male.getName())) {
-          select.selectByValue(GenderData.Male.getOption());
+       if (userGender.equalsIgnoreCase(GenderData.MALE.getName())) {
+          select.selectByValue(GenderData.MALE.getOption());
        } else {
-           select.selectByValue(GenderData.Female.getOption());
+           select.selectByValue(GenderData.FEMALE.getOption());
        }
-   inputForm.fillTextField(companySelector, userCompany);
-   inputForm.fillTextField(positionSelector, userPosition);
+   inputForm.fillInputFields(InputFieldData.COMPANY, userCompany);
+   inputForm.fillInputFields(InputFieldData.POSITION, userPosition);
    logger.info("заполнен блок 'Другое'");
+   return this;
    }
-   public void fillDevInfo () {
-      inputForm.clickSimpleButton(addExperienceSelector);
-      select = new Select(driver.findElement(devLanguageSelector));
-      select.selectByValue(userDevLanguageFromEnum.getOption());
-      select = new Select(driver.findElement(devExperienceSelector));
-      select.selectByValue(userDevExperienceFromEnum.getOption());
+   public AboutMePage fillDevInfo () {
+   By exeperienceBlockLocator = By.cssSelector("[class='experience-row js-formset-row']");
+   By deleteLocator = By.cssSelector("[class^='experience-row__remove']");
+   List<WebElement> delButtons = driver.findElements(deleteLocator);
+    if (driver.findElements(exeperienceBlockLocator).size() > 1) {
+        for (int i = (driver.findElements(exeperienceBlockLocator).size()); i>1; i--) {
+           delButtons.get(i-1).click();
+       }
+    }
+   if (driver.findElements(exeperienceBlockLocator).size() == 0) {
+       driver.findElement(addExperienceSelector).click();
+       wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("[class='experience-row js-formset-row']")));
+   }
+       select = new Select(driver.findElement(devLanguageSelector));
+       select.selectByValue(userDevLanguageFromEnum.getOption());
+       select = new Select(driver.findElement(devExperienceSelector));
+       select.selectByValue(userDevExperienceFromEnum.getOption());
       logger.info("заполнен блок 'Опыт разработки'");
+   return this;
    }
-   public void saveAll () {
-      inputForm.clickSimpleButton(saveAndContinueButton);
+   public AboutMePage saveAll () {
+      driver.findElement(saveAndContinueButton).click();
       wait.until(ExpectedConditions.urlContains("skills"));
       logger.info("данные сохранены");
+      return this;
    }
 
-
-   public void assertPersonalInfo () {
-   //wait.until(ExpectedConditions.visibilityOf(driver.findElement(firstNameRu)));
-   Assertions.assertEquals(userRuFirstName, driver.findElement(firstNameRu).getAttribute("value"));
-   Assertions.assertEquals(userRuLastName, driver.findElement(lastNameRu).getAttribute("value"));
-   Assertions.assertEquals(userEnFirstName, driver.findElement(firstNameEn).getAttribute("value"));
-   Assertions.assertEquals(userEnLastName, driver.findElement(lastNameEn).getAttribute("value"));
-   Assertions.assertEquals(userEnBlogName, driver.findElement(blogName).getAttribute("value"));
-    SimpleDateFormat formatter= new SimpleDateFormat("dd.MM.yyyy");
-    String date = formatter.format(userBirthDate);
-    Assertions.assertEquals(date, driver.findElement(birthDateLocator).getAttribute("value"));
- //  String fullStyleName = driver.findElement(By.cssSelector("[class^='settings-photo__photo']")).getAttribute("style");
-  // String avatarUrl = "background-image: url(https://cdn.otus.ru/media/public/77/a3/avatar-326769-77a30e.png)";/сконструировать, как обрезать
-//   Assertions.assertEquals(); скачивать картинку и сравнивать с оригиналом
-//   Assertions.assertEquals();
+   public AboutMePage assertPersonalInfo () {
+       inputForm.assertInputFields(InputFieldData.FIRSTNAMERU, userRuFirstName);
+       inputForm.assertInputFields(InputFieldData.LASTNAMERU, userRuLastName);
+       inputForm.assertInputFields(InputFieldData.FIRSTNAMEEN, userEnFirstName);
+       inputForm.assertInputFields(InputFieldData.LASTNAMEEN, userEnLastName);
+       inputForm.assertInputFields(InputFieldData.BLOGNAME, userEnBlogName);
+   SimpleDateFormat formatter= new SimpleDateFormat("dd.MM.yyyy");
+   String date = formatter.format(userBirthDate);
+   Assertions.assertEquals(date, driver.findElement(birthDateLocator).getAttribute("value"), "Дата рождения сохранена некорректно");
+   Assertions.assertFalse(driver.findElement(By.cssSelector("[class^='settings-photo__photo']")).getAttribute("style").isEmpty(), "Изображение не загружено");
    logger.info("Персональные данные сохранены корректно");
-    }
+   return this;
+   }
 
-  public void assertGeneralInfo () {
+  public AboutMePage assertGeneralInfo () {
 
 
-  }
+  inputForm.assertRadioButtonChoice(userReadyToRelocate, readyToRelocateTrue, readyToRelocateFalse);
+  inputForm.assertCheckboxChoice(fullTimeString, workFormatFullTime);
+  inputForm.assertCheckboxChoice(partTimeString, workFormatFlexible);
+  inputForm.assertCheckboxChoice(remoteString, workFormatRemote);
 
-  public void assertConactInfo () {
+  logger.info("Основная информация сохранена корректно");
+   return this;
+   }
+
+  public AboutMePage assertContactInfo () { //добавить проверку, что будет два блока
 
   //сделать массив, получить два элемента и проверить, что их два и содержание поля
       //
       //
       //
       //
-
+//проверить, что почта и телефон не пустые
+   return this;
    }
 
-    public void assertOtherInfo () {
+    public AboutMePage assertOtherInfo () {
     select = new Select(driver.findElement(genderSelector));
-    Assertions.assertEquals(userGender, select.getFirstSelectedOption().getText());
-    Assertions.assertEquals(userCompany,driver.findElement(companySelector).getAttribute("value"));
-    Assertions.assertEquals(userPosition, driver.findElement(positionSelector).getAttribute("value"));
-     logger.info("Раздел 'Другое' заполнен корректно");
+    Assertions.assertEquals(userGender, select.getFirstSelectedOption().getText(), "Пол пользователя сохранён некорректно");
+    inputForm.assertInputFields(InputFieldData.COMPANY, userCompany);
+    inputForm.assertInputFields(InputFieldData.POSITION, userCompany);
+//    Assertions.assertEquals(userCompany,driver.findElement(companySelector).getAttribute("value"));
+//    Assertions.assertEquals(userPosition, driver.findElement(positionSelector).getAttribute("value"));
+    logger.info("Раздел 'Другое' заполнен корректно");
+    return this;
    }
 
-    public void assertDevInfo () {
+    public AboutMePage assertDevInfo () {
+        By exeperienceBlockLocator = By.cssSelector("[class='experience-row js-formset-row']");
+        List<WebElement> devBlocks = driver.findElements(exeperienceBlockLocator);
+        Assertions.assertTrue(devBlocks.size()==1, "Количество записей в блоке 'Опыт разработки' некорректно");
         select = new Select(driver.findElement(devLanguageSelector));
-        Assertions.assertEquals(userDevLanguageFromEnum.getName(), select.getFirstSelectedOption().getText());
+        Assertions.assertEquals(userDevLanguageFromEnum.getName(), select.getFirstSelectedOption().getText(), "Язык разработки сохранён некорректно");
         select = new Select (driver.findElement(devExperienceSelector));
-        Assertions.assertEquals(userDevExperienceFromEnum.getName(), select.getFirstSelectedOption().getText());
+        Assertions.assertEquals(userDevExperienceFromEnum.getName(), select.getFirstSelectedOption().getText(), "Опыт разработки сохранён некорректно");
         logger.info("Опыт разработки заполнен корректно");
+   return this;
    }
 }

@@ -2,6 +2,7 @@ package pages;
 
 import com.github.javafaker.Faker;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import pageObject.AbsPageObject;
 import java.util.Locale;
 
@@ -20,16 +21,12 @@ public abstract class AbsBasePage extends AbsPageObject {
 
     public void open(String path) {
         driver.get(BASE_URL + path);
+        wait.until(ExpectedConditions.urlToBe(BASE_URL + path));
     }
 
-    public void accessViaMainPage(String testLogin, String testPassword) {
-        new MainPage(driver)
-                .open("");
-
+    public void close() {
+        if (this.driver != null) {
+            this.driver.close();
+        }
     }
-//    public void unSign() {
-//
-//        ProfileDropDownComponent.unSign();
-//    }}
-
 }

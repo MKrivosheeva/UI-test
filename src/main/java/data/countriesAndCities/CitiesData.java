@@ -1,10 +1,10 @@
 package data.countriesAndCities;
 public enum CitiesData  {
 
-    Moscow("Москва", CountriesData.Russia),
-    Piter("Санкт-Петербург", CountriesData.Russia),
-    Anapa("Анапа", CountriesData.Russia),
-    BELCI("Лимассол", CountriesData.MOLDOVA);
+    MOSCOW("Москва", CountriesData.RUSSIA),
+    PITER("Санкт-Петербург", CountriesData.RUSSIA),
+    ANAPA("Анапа", CountriesData.RUSSIA),
+    BELCI("Бельцы", CountriesData.MOLDOVA);
 
     private String name;
     private CountriesData countriesData;

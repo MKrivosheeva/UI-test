@@ -15,7 +15,7 @@ public class ProfileDropDownComponent extends AbsBaseComponent {
         super(driver);
     }
 
-    public void unSign() {
+    public ProfileDropDownComponent unSign() {
         JavascriptExecutor js = (JavascriptExecutor)driver;
         String exitSelector = "a[title='Выход']";
         String profileMenuSelector = "[class$=username]";
@@ -26,5 +26,6 @@ public class ProfileDropDownComponent extends AbsBaseComponent {
 //        actions.moveToElement(driver.findElement(By.cssSelector(exitSelector))).click();
         wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.cssSelector("button[class='sc-9a4spb-0 boaxIc']"))));
         logger.info("Пользователь разлогинился");
+    return this;
     }
 }

@@ -1,5 +1,6 @@
 package aboutMePage;
 
+import components.HeaderMenuComponent;
 import components.SignInComponent;
 import driver.DriverFactory;
 import exception.DriverNotSupportedException;
@@ -10,7 +11,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import pages.AboutMePage;
 import pages.MainPage;
-import java.util.concurrent.TimeUnit;
 
 public class AboutMePageTest {
 
@@ -18,6 +18,7 @@ public class AboutMePageTest {
     public org.apache.logging.log4j.Logger logger = LogManager.getLogger(AboutMePageTest.class);
     private String testLogin = System.getProperty("testStudent.login");
     private String testPassword = System.getProperty("testStudent.password");
+    private String aboutPagepath = "/lk/biography/personal/";
 
     @BeforeAll
     public static void load() {
@@ -33,8 +34,11 @@ public class AboutMePageTest {
         driver.findElement(By.cssSelector("button[class='js-cookie-accept cookies__button']")).click();
         logger.info("Куки одобрены");
         SignInComponent signInComponent = new SignInComponent(driver);
+        HeaderMenuComponent headerMenu = new HeaderMenuComponent(driver);
+        headerMenu.initSignIn();
         signInComponent.signIn(testLogin, testPassword);
     }
+
     @AfterEach
     public void close() {
         if (this.driver != null) {
@@ -44,30 +48,36 @@ public class AboutMePageTest {
     }
 
     @Test
-    public void fillAboutMePage() {
+    @Order(1) //так не делать, объединить
+    public void fillAboutMePage() { //написать сплошным тестом
         AboutMePage aboutMePage = new AboutMePage(driver);
-        aboutMePage.open();
-     //   aboutMePage.fillPersonalData();
+        aboutMePage.open(aboutPagepath);
+        aboutMePage.fillPersonalData();
         aboutMePage.fillGeneralInfo();
 //        aboutMePage.fillContactInfo();
-//        aboutMePage.fillOtherInfo();
-//        aboutMePage.fillDevInfo();
+        aboutMePage.fillOtherInfo();
+        aboutMePage.fillDevInfo();
         aboutMePage.saveAll();
-
-//        ProfileDropDownComponent userMenu = new ProfileDropDownComponent(driver);
-//        SignInComponent signInComponent = new SignInComponent(driver);
-//        userMenu.unSign();
-    }
+//        //закрыть сессию браузер
+//        aboutMePage.close();
+//        driver.get(System.getProperty("base.url"));
+//        driver.switchTo().window((driver.getTitle()));
+//
+//
+//        //потом драйвер гет
+//        //переключиться на новую сессию swithcTOwindow передать айди окна из getheader
+//        //
+//    }
 //    @Test
+//    @Order(2)
 //    public void valiateAboutMePage() {
 //           AboutMePage aboutMePage = new AboutMePage(driver);
-//           aboutMePage.open();
-//           driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS); //исправить ожидание
-//           aboutMePage.assertPersonalInfo();
-//           aboutMePage.assertGeneralInfo();
-//           aboutMePage.assertConactInfo();
+//           aboutMePage.open(aboutPagepath);
+        //       aboutMePage.assertPersonalInfo();
+//         aboutMePage.assertGeneralInfo();
+//        //   aboutMePage.assertContactInfo();
 //           aboutMePage.assertOtherInfo();
-//           aboutMePage.assertDevInfo();
-//    }
+        //    aboutMePage.assertDevInfo();
+    }
 }
 

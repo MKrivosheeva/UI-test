@@ -1,7 +1,7 @@
 package data.countriesAndCities;
 
 public enum CountriesData {
-    Russia("Россия"),
+    RUSSIA("Россия"),
     MOLDOVA("Молдова");
 
     private String name;
