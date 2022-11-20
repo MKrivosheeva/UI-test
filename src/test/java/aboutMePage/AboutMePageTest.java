@@ -1,12 +1,15 @@
 package aboutMePage;
 
+import components.HeaderMenuComponent;
 import driver.DriverFactory;
 import exception.DriverNotSupportedException;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.logging.log4j.LogManager;
 import org.junit.jupiter.api.*;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import pages.AboutMePage;
+import pages.MainPage;
 import usefulCommonInteractions.AuthorizationStepsForTests;
 
 public class AboutMePageTest {
@@ -23,8 +26,13 @@ public class AboutMePageTest {
     @BeforeEach
     public void init() throws DriverNotSupportedException {
         this.driver = new DriverFactory().getDriver();
+        new MainPage(driver)
+                .open("/");
+        logger.info("Открыта главная страница");
+        driver.findElement(By.cssSelector("button[class='js-cookie-accept cookies__button']")).click();
+        logger.info("Куки одобрены");
         AuthorizationStepsForTests authorization = new AuthorizationStepsForTests(driver);
-        authorization.openAndAuthorization();
+        authorization.authorization();
     }
 
     @AfterEach
@@ -45,7 +53,11 @@ public class AboutMePageTest {
         aboutMePage.fillOtherInfo();
         aboutMePage.fillDevInfo();
         aboutMePage.saveAll();
-        driver.navigate().back();
+        HeaderMenuComponent headermenu = new HeaderMenuComponent(driver);
+        headermenu.unSign();
+        AuthorizationStepsForTests authorization = new AuthorizationStepsForTests(driver);
+        authorization.authorization();
+        aboutMePage.open(aboutPagepath);
         aboutMePage.assertPersonalInfo();
         aboutMePage.assertGeneralInfo();
         aboutMePage.assertContactInfo();

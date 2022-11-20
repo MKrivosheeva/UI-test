@@ -25,29 +25,8 @@ public class SignInComponent extends AbsBaseComponent {
    pswdField.sendKeys(password);
    enterButton.click();
    wait.until(ExpectedConditions.invisibilityOf(driver.findElement(By.cssSelector("[class='modal-container new-log-reg-container']"))));
-
    return this;
    }
 }
-//    public SignInComponent signIn(String login, String password) { //вернуть объект модальное окно авторизации
-//        //создать компонент с хэдером
-//        //в нём кликать по кнопке
-//        //метод возвращает объект модалки
-//        //после клика методы ввода пароля в модалке, проверить, что закрылось
-//        //после входа надо вернуть объект модального окно
-//        //открыть страницу, добавить класс для страницы профиля (есть)
-//        //метод на абстрактной странице, который закрывает сессию браузера
-//        //и в абс.метод открыть
-//
-//
-//       // By signInButtonSelector = By.cssSelector("button[data-modal-id=new-log-reg]"); //
-//        By loginField = By.cssSelector("input[placeholder='Электронная почта'][type='text']");
-//        By pswdField = By.cssSelector("input[type=password]");
-//        By enterButton = By.cssSelector("button[class$='new-button_md'][type='submit']");
-//       // clickSimpleButton(signInButtonSelector);
-//        fillTextField(loginField, login);
-//        fillTextField(pswdField, password);
-//        clickSimpleButton(enterButton);
-//     return this;
-//    }
+
 

@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum DevLanguagesData { //там значения в значениях атрибутов, а не в коде
+public enum DevLanguagesData {
   JAVA ("Java", "3"),
   PYTHON ("Python", "10"),
   RUBY ("Ruby", "9");
