@@ -52,12 +52,12 @@ public class AboutMePageTest {
     public void fillAboutMePage() { //написать сплошным тестом
         AboutMePage aboutMePage = new AboutMePage(driver);
         aboutMePage.open(aboutPagepath);
-        aboutMePage.fillPersonalData();
-        aboutMePage.fillGeneralInfo();
-//        aboutMePage.fillContactInfo();
-        aboutMePage.fillOtherInfo();
-        aboutMePage.fillDevInfo();
-        aboutMePage.saveAll();
+//        aboutMePage.fillPersonalData();
+//        aboutMePage.fillGeneralInfo();
+       aboutMePage.fillContactInfo();
+//        aboutMePage.fillOtherInfo();
+//        aboutMePage.fillDevInfo();
+ //       aboutMePage.saveAll();
 //        //закрыть сессию браузер
 //        aboutMePage.close();
 //        driver.get(System.getProperty("base.url"));
@@ -73,9 +73,9 @@ public class AboutMePageTest {
 //    public void valiateAboutMePage() {
 //           AboutMePage aboutMePage = new AboutMePage(driver);
 //           aboutMePage.open(aboutPagepath);
-        //       aboutMePage.assertPersonalInfo();
-//         aboutMePage.assertGeneralInfo();
-//        //   aboutMePage.assertContactInfo();
+        //   aboutMePage.assertPersonalInfo();
+       //  aboutMePage.assertGeneralInfo();
+    //   aboutMePage.assertContactInfo();
 //           aboutMePage.assertOtherInfo();
         //    aboutMePage.assertDevInfo();
     }

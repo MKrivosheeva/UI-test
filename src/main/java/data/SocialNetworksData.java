@@ -6,8 +6,8 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum SocialNetworksData {
-   FACEBOOK("Facebook"),
-   HABR("Habr"),
-   TELEGRAM("Telegram");
+   FACEBOOK("facebook"),
+   HABR("habr"),
+   TELEGRAM("telegram");
    private String name;
 }
