@@ -3,7 +3,7 @@ package pages;
 import com.github.javafaker.Faker;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import pageObject.AbsPageObject;
+import usefulCommonInteractions.AbsPageObject;
 import java.util.Locale;
 
 

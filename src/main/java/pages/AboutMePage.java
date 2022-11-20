@@ -117,16 +117,13 @@ public class AboutMePage extends AbsBasePage {
    wait.until(ExpectedConditions.not(ExpectedConditions.attributeContains(city, "value disabled", "disabled")));
    By cityListSelector = By.xpath("//input[@name='city']/../following-sibling::div");
    inputForm.popupInteraction(city, cityListSelector, citySelector);
-    By englishLevelListSelector = By.xpath("//input[@name='english_level']/../following-sibling::div");
-    inputForm.popupInteraction(englishLevel, englishLevelListSelector, englishLevelSelector);
-   // By englishLevelList = By.xpath("//input[@data-title='Уровень знания английского языка']/../following-sibling::div");
-  //  wait.until((ExpectedConditions.attributeContains(englishLevelList, "class", "hide")));
-//
-    inputForm.radioButtonInteraction(readyToRelocateFalse, readyToRelocateTrue, userReadyToRelocate);
-    inputForm.checkboxInteraction(fullTimeString, workFormatFullTime);
-    inputForm.checkboxInteraction(partTimeString, workFormatFlexible);
-    inputForm.checkboxInteraction(remoteString, workFormatRemote);
-    logger.info("заполнен блок 'Основная информация'");
+   By englishLevelListSelector = By.xpath("//input[@name='english_level']/../following-sibling::div");
+   inputForm.popupInteraction(englishLevel, englishLevelListSelector, englishLevelSelector);
+   inputForm.radioButtonInteraction(readyToRelocateFalse, readyToRelocateTrue, userReadyToRelocate);
+   inputForm.checkboxInteraction(fullTimeString, workFormatFullTime);
+   inputForm.checkboxInteraction(partTimeString, workFormatFlexible);
+   inputForm.checkboxInteraction(remoteString, workFormatRemote);
+   logger.info("заполнен блок 'Основная информация'");
     return this;
 
      }
@@ -156,11 +153,13 @@ public class AboutMePage extends AbsBasePage {
        wait.until(ExpectedConditions.presenceOfElementLocated(list));
        String userFirstNetworkTypeSelector = String.format("//div[@data-num='0']//button[@data-value='%s']", userNetworkFirst);
        driver.findElement(By.xpath(userFirstNetworkTypeSelector)).click();
+       driver.findElement(networkFirstValueSelector).clear();
        driver.findElement(networkFirstValueSelector).sendKeys(userNetworkUserNameFirst);
        String userSecondNetworkTypeSelector = String.format("//div[@data-num='1']//button[@data-value='%s']", userNetworkSecond);
        driver.findElement(networkSecondTypeSelector).click();
        wait.until(ExpectedConditions.presenceOfElementLocated(list));
        driver.findElement(By.xpath(userSecondNetworkTypeSelector)).click();
+       driver.findElement(networkSecondValueSelector).clear();
        driver.findElement(networkSecondValueSelector).sendKeys(userNetworkUserNameSecond);
    logger.info("Заполнен блок 'Контактная информация'");
    return this;
@@ -248,7 +247,7 @@ public class AboutMePage extends AbsBasePage {
     select = new Select(driver.findElement(genderSelector));
     Assertions.assertEquals(userGender, select.getFirstSelectedOption().getText(), "Пол пользователя сохранён некорректно");
     inputForm.assertInputFields(InputFieldData.COMPANY, userCompany);
-    inputForm.assertInputFields(InputFieldData.POSITION, userCompany);
+    inputForm.assertInputFields(InputFieldData.POSITION, userPosition);
     logger.info("Раздел 'Другое' заполнен корректно");
     return this;
    }
