@@ -1,22 +1,51 @@
 package aboutMePage;
 
-import components.HeaderMenuComponent;
+import data.*;
+import data.countriesAndCities.CitiesData;
+import data.countriesAndCities.CountriesData;
 import driver.DriverFactory;
 import exception.DriverNotSupportedException;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.logging.log4j.LogManager;
 import org.junit.jupiter.api.*;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import pages.AboutMePage;
-import pages.MainPage;
+import usefulCommonInteractions.AbsPageObject;
 import usefulCommonInteractions.AuthorizationStepsForTests;
+import java.util.Date;
 
-public class AboutMePageTest {
+
+public class AboutMePageTest extends AbsPageObject {
 
     private WebDriver driver;
-    public org.apache.logging.log4j.Logger logger = LogManager.getLogger(AboutMePageTest.class);
-    private String aboutPagepath = "/lk/biography/personal/";
+    private org.apache.logging.log4j.Logger logger = LogManager.getLogger(AboutMePageTest.class);
+    private String userRuFirstName = ruFaker.name().firstName();
+    private String userRuLastName = ruFaker.name().lastName();
+    private String userEnFirstName = enFaker.name().firstName();
+    private String userEnLastName = enFaker.name().lastName();
+    private String userEnBlogName = enFaker.name().firstName();
+    private Date userBirthDate = dateFaker.date().birthday(18, 105);
+    private String imagePath = "/src/main/java/data/images/avatar.jpg";
+
+    private String userCountry = CountriesData.MOLDOVA.getName();
+    private String userCity = CitiesData.BELCI.getName();
+    private String userEnglishLevel = EnglishLevelData.ADVANCED.getName();
+    private Boolean userReadyToRelocate = ReadyToRelocateData.FALSE.getValue();
+    private Boolean workFormatFlexible = false;
+    private Boolean workFormatRemote = true;
+    private Boolean workFormatFullTime = false;
+
+    private String userNetworkUserNameFirst = enFaker.name().username();
+    private String userNetworkUserNameSecond = enFaker.name().username();
+    private String userNetworkFirst = SocialNetworksData.FACEBOOK.getName();
+    private String userNetworkSecond = SocialNetworksData.TELEGRAM.getName();
+
+    private String userGender = GenderData.FEMALE.getName();
+    private String userCompany = ruFaker.company().name();
+    private String userPosition = ruFaker.company().profession();
+
+    private DevLanguagesData userDevLanguage = DevLanguagesData.RUBY;
+    private DevExperienceData userDevExperience = DevExperienceData.TWOYEARS;
 
     @BeforeAll
     public static void load() {
@@ -26,13 +55,8 @@ public class AboutMePageTest {
     @BeforeEach
     public void init() throws DriverNotSupportedException {
         this.driver = new DriverFactory().getDriver();
-        new MainPage(driver)
-                .open("/");
-        logger.info("Открыта главная страница");
-        driver.findElement(By.cssSelector("button[class='js-cookie-accept cookies__button']")).click();
-        logger.info("Куки одобрены");
         AuthorizationStepsForTests authorization = new AuthorizationStepsForTests(driver);
-        authorization.authorization();
+        authorization.authorization(driver);
     }
 
     @AfterEach
@@ -44,25 +68,28 @@ public class AboutMePageTest {
     }
 
     @Test
-    public void fillAboutMePage() {
+    public void fillAboutMePage() throws DriverNotSupportedException {
         AboutMePage aboutMePage = new AboutMePage(driver);
-        aboutMePage.open(aboutPagepath);
-        aboutMePage.fillPersonalData();
-        aboutMePage.fillGeneralInfo();
-        aboutMePage.fillContactInfo();
-        aboutMePage.fillOtherInfo();
-        aboutMePage.fillDevInfo();
+        aboutMePage.openAboutMePage();
+        aboutMePage.fillPersonalData(userRuFirstName, userRuLastName, userEnFirstName, userEnLastName, userEnBlogName, userBirthDate, imagePath);
+        aboutMePage.fillGeneralInfo(userCountry, userCity, userEnglishLevel, userReadyToRelocate);
+        aboutMePage.chooseWorkFormat(workFormatFullTime, workFormatFlexible, workFormatRemote);
+        aboutMePage.fillContactInfo(userNetworkUserNameFirst, userNetworkFirst, userNetworkUserNameSecond, userNetworkSecond);
+        aboutMePage.fillOtherInfo(userGender, userCompany, userPosition);
+        aboutMePage.fillDevInfo(userDevLanguage, userDevExperience);
         aboutMePage.saveAll();
-        HeaderMenuComponent headermenu = new HeaderMenuComponent(driver);
-        headermenu.unSign();
+        driver.quit();
+        driver = new DriverFactory().getDriver();
         AuthorizationStepsForTests authorization = new AuthorizationStepsForTests(driver);
-        authorization.authorization();
-        aboutMePage.open(aboutPagepath);
-        aboutMePage.assertPersonalInfo();
-        aboutMePage.assertGeneralInfo();
-        aboutMePage.assertContactInfo();
-        aboutMePage.assertOtherInfo();
-        aboutMePage.assertDevInfo();
+        authorization.authorization(driver);
+        aboutMePage = new AboutMePage(driver);
+        aboutMePage.openAboutMePage();
+        aboutMePage.assertPersonalInfo(userRuFirstName, userRuLastName, userEnFirstName, userEnLastName, userEnBlogName, userBirthDate);
+        aboutMePage.assertGeneralInfo(userCountry, userCity, userEnglishLevel, userReadyToRelocate);
+        aboutMePage.assertWorkFormat(workFormatFullTime, workFormatFlexible, workFormatRemote);
+        aboutMePage.assertContactInfo(userNetworkUserNameFirst, userNetworkFirst, userNetworkUserNameSecond, userNetworkSecond);
+        aboutMePage.assertOtherInfo(userGender, userCompany, userPosition);
+        aboutMePage.assertDevInfo(userDevLanguage, userDevExperience);
         logger.info("Тест пройден");
     }
 }
