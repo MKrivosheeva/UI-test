@@ -24,7 +24,7 @@ public class SignInComponent extends AbsBaseComponent {
    loginField.sendKeys(login);
    pswdField.sendKeys(password);
    enterButton.click();
-   wait.until(ExpectedConditions.invisibilityOf(driver.findElement(By.cssSelector("[class='modal-container new-log-reg-container']"))));
+   wait.until(ExpectedConditions.invisibilityOf(driver.findElement(By.cssSelector("[class$='log-reg-container'][data-modal-id='new-log-reg']"))));
    return this;
    }
 }

@@ -11,7 +11,7 @@ public abstract class AbsBaseComponent extends AbsPageObject {
         super(driver);
     }
 
-    protected WebDriverWait wait = new WebDriverWait(driver, 5);
+    protected WebDriverWait wait = new WebDriverWait(driver, 10);
     protected JavascriptExecutor js = (JavascriptExecutor) driver;
 
 }

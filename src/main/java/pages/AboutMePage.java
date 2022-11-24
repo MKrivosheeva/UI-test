@@ -94,8 +94,8 @@ public class AboutMePage extends AbsBasePage {
     @FindBy(css = "button[title='Сохранить и продолжить']")
     private WebElement saveAndContinueButton;
 
-    private By networkBlockLocator = By.xpath("//div[@class='container__row js-formset-row']");
-    private By exeperienceBlockLocator = By.cssSelector("[class='experience-row js-formset-row']");
+    private By networkBlockLocator = By.xpath("//div[@data-prefix='contact']//div[contains(@class, 'formset-row')]");
+    private By exeperienceBlockLocator = By.xpath("//div[@data-prefix='experience']//div[contains(@class, 'formset-row')]");
     private InputFormComponent inputForm = new InputFormComponent(driver);
     private Select select = null;
 
@@ -139,7 +139,7 @@ public class AboutMePage extends AbsBasePage {
     }
 
     public AboutMePage fillContactInfo(String firstUsername, String firstNetwork, String secondUsername, String secondNetwork) {
-        By deleteLocator = By.xpath("//div[@class='container__row js-formset-row']//div[3]//button[contains(@class, 'delete')]");
+        By deleteLocator = By.xpath("//div[@data-prefix='contact']//div[contains(@class, 'formset-row')]//div[3]//button[contains(@class, 'delete')]");
         List<WebElement> delButtons = driver.findElements(deleteLocator);
         switch (delButtons.size()) {
             case 0: {
@@ -159,7 +159,7 @@ public class AboutMePage extends AbsBasePage {
                 break;
             }
         }
-        By list = By.cssSelector("div[class='lk-cv-block__select-options lk-cv-block__select-options_left js-custom-select-options-container']");
+        By list = By.xpath("//div[@data-prefix='contact']//div[contains(@class, 'formset-row')]//div[contains(@class, 'options-container')][not(contains(@class,'hide'))]");
         networkFirstTypeSelectWebelement.click();
         wait.until(ExpectedConditions.presenceOfElementLocated(list));
         String userFirstNetworkTypeSelector = String.format("//div[@data-num='0']//button[@data-value='%s']", firstNetwork);

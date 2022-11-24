@@ -30,7 +30,7 @@ public class AboutMePageTest extends AbsPageObject {
     private String userCountry = CountriesData.MOLDOVA.getName();
     private String userCity = CitiesData.BELCI.getName();
     private String userEnglishLevel = EnglishLevelData.ADVANCED.getName();
-    private Boolean userReadyToRelocate = ReadyToRelocateData.FALSE.getValue();
+    private Boolean userReadyToRelocate = true;
     private Boolean workFormatFlexible = false;
     private Boolean workFormatRemote = true;
     private Boolean workFormatFullTime = false;

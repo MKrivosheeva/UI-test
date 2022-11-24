@@ -18,7 +18,7 @@ public class HeaderMenuComponent extends AbsBaseComponent{
 
     public SignInComponent initSignIn() {
         signInButton.click();
-        wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.cssSelector("[class='modal-container new-log-reg-container']"))));
+        wait.until(ExpectedConditions.visibilityOf(driver.findElement(By.cssSelector("[class$='log-reg-container'][data-modal-id='new-log-reg']"))));
         SignInComponent authorizationWindow = new SignInComponent(driver);
     return authorizationWindow;
     }
